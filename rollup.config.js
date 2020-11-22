@@ -13,7 +13,17 @@ export default [
           return true;
         }
 
-        return id.startsWith('lodash') || id.startsWith('ajv');
+        if (id === 'ajv/lib/compile/equal') {
+          // This module just requires 'fast-deep-equal'.
+          // By inlining it we can break the dependency on ajv.
+          return false;
+        }
+
+        if (id.startsWith('ajv')) {
+          throw new Error('AJV is now a required dependency again. Adjust the dependencies and this code.');
+        }
+
+        return id.startsWith('lodash');
     },
     output: [
       {
